@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>API Data as Cards</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <style>
+        .container{
+            background-color: rgba(125,125,125,0.2);
+        }
+        .heading{
+            margin: 30px;
+            text-align: center;
+        }
+        #card-container{
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            padding: 20px;
+        }
+        .card{
+            margin: 10px;
+            min-width: 300px;
+            border: 1px solid gray;
+            box-shadow: 1px 2px 3px gray;
+        }
+        .card:hover{
+            box-shadow: 1px 2px 3px 3px gray;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="heading">Printing API Data as Cards</h1>
+    <div class="container">
+        <div id="card-container">
+            
+        </div>
+    </div>
+    <script>
+
+        const http = new XMLHttpRequest()
+        http.open("GET","https://reqres.in/api/users?page=2")
+        http.send()
+        http.onload = function(){
+            var recvData = JSON.parse(http.responseText)
+            var dataColumn = recvData.data
+            console.log(dataColumn)
+            for (let index = 0; index < dataColumn.length; index++) {
+
+                const container = document.getElementById("card-container")
+                const card = document.createElement("div")
+                card.classList.add("card")
+                const img = document.createElement("img")
+                img.classList.add("card-img-top")
+                img.setAttribute("id", "respImg")
+                const cardbody = document.createElement("div")
+                cardbody.classList.add("card-body")
+                const ptag1 = document.createElement("p")
+                ptag1.setAttribute("id", "id")
+                const ptag2 = document.createElement("p")
+                ptag2.setAttribute("id", "email")
+                const ptag3 = document.createElement("p")
+                ptag3.setAttribute("id", "firstName")
+                const ptag4 = document.createElement("p")
+                ptag4.setAttribute("id", "lastName")
+                cardbody.appendChild(ptag1)
+                cardbody.appendChild(ptag2)
+                cardbody.appendChild(ptag3)
+                cardbody.appendChild(ptag4)
+                card.appendChild(img)
+                card.appendChild(cardbody)
+                container.appendChild(card)
+
+                img.src = dataColumn[index].avatar
+                ptag1.innerText = "ID : " + dataColumn[index].id
+                ptag2.innerText = "Email : " + dataColumn[index].email
+                ptag3.innerText = "First Name : " + dataColumn[index].first_name
+                ptag4.innerText = "Last Name : " + dataColumn[index].last_name
+            }
+
+        }
+        </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

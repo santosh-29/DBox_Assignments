@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Covid 19 Dashboards</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href=''>
+    <script src=''></script>
+    <style>
+        
+        .heading{
+            margin: 30px;
+            text-align: center;
+        }
+        .search_container{
+            text-align: center;
+        }
+        .search_input{
+            width: 50%;
+            padding: 20px;
+            border: 1px solid gray;
+            border-radius: 25px;
+            font-size: 20px;
+        }
+        .search_btn{
+            width: 150px;
+            margin: 20px;
+            padding: 10px;
+            border-radius: 25px;
+            font-size: 20px;
+            letter-spacing: 1px;
+            background-color: #0275d8;
+            color: white;
+        }
+        #card-container{
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            padding: 20px;
+        }
+        .card{
+            margin: 10px;
+            min-width: 300px;
+            border: 1px solid gray;
+            box-shadow: 1px 2px 3px gray;
+            border-radius: 10px;
+        }
+        .card-body{
+            background-color: rgba(125,125,125,0.2);
+            padding: 10px;
+            
+        }
+        .card:hover{
+            box-shadow: 1px 2px 3px 3px gray;
+        }
+        .focused{
+            background-color: black;
+            color: white;
+            box-shadow: 1px 2px 5px 5px gray;
+        }
+        p{
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 class="heading">Covid 19 API Data Stats</h1>
+    <div class="search_container">
+        <!-- <form action="" onsubmit="searchFilter()"> -->
+            <div>
+                <input type="search" name="" id="search_text" placeholder="Search for a country.." class="search_input">
+            </div>
+            <div>
+                <button type="submit" class="search_btn" onclick="searchFilter()">Submit</button>
+            </div>
+        <!-- </form> -->
+    </div>
+    <div class="container">
+        <div id="card-container">
+            
+        </div>
+    </div>
+
+    <script>
+        const data = null;
+        var APIData
+        const xhr = new XMLHttpRequest();
+        
+        xhr.open("GET", "https://corona-virus-world-and-india-data.p.rapidapi.com/api");
+        xhr.setRequestHeader("X-RapidAPI-Key", "5cca16425cmsh926087e15ee34fap1e8f0djsn58500ff6a1ed");
+        xhr.setRequestHeader("X-RapidAPI-Host", "corona-virus-world-and-india-data.p.rapidapi.com");
+        
+        xhr.send(data);
+        
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === this.DONE) {
+                var responseData = JSON.parse(this.responseText)
+                dataColumn = responseData.countries_stat
+                APIData = dataColumn
+                len = dataColumn.length
+                addToScreen(dataColumn)
+            }
+        });
+
+        function addToScreen(dataColumn){
+            var len = dataColumn.length
+            for (let index = 0; index < len; index++) {
+                const container = document.getElementById("card-container")
+                const card = document.createElement("div")
+                card.classList.add("card")
+
+                const cardbody = document.createElement("div")
+                cardbody.classList.add("card-body")
+                const ptag1 = document.createElement("p")
+                const ptag2 = document.createElement("p")
+                const ptag3 = document.createElement("p")
+                const ptag4 = document.createElement("p")
+                const ptag5 = document.createElement("p")
+                cardbody.appendChild(ptag1)
+                cardbody.appendChild(ptag2)
+                cardbody.appendChild(ptag3)
+                cardbody.appendChild(ptag4)
+                cardbody.appendChild(ptag5)
+                card.appendChild(cardbody)
+                container.appendChild(card)
+
+                card.setAttribute("id",dataColumn[index].country_name.toUpperCase())
+
+                ptag1.innerText = "Country Name : " + dataColumn[index].country_name
+                ptag2.innerText = "Active Cases : " + dataColumn[index].cases
+                ptag3.innerText = "Recovered Cases : " + dataColumn[index].total_recovered
+                ptag4.innerText = "Deaths : " + dataColumn[index].deaths
+                ptag5.innerText = "Total Tests : " + dataColumn[index].total_tests
+            }
+
+        }
+
+        function searchFilter(){
+            searchKey = document.getElementById("search_text").value.toUpperCase()
+            document.getElementById("search_text").value = ''
+            var keyCard = document.getElementById(searchKey)
+            keyCard.scrollIntoView({behavior: 'smooth'}, true);
+            keyCard.classList.add("focused")
+            setTimeout(() => { keyCard.classList.remove("focused") }, 1000);
+        }
+
+    </script>
+</body>
+</html>
